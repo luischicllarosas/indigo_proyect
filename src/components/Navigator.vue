@@ -24,7 +24,6 @@
           Verificado</b-navbar-item
         >
         <b-navbar-item
-          href="#"
           @click="verifiedEmail"
           v-else
           class="has-text-danger has-text-weight-bold"
@@ -32,7 +31,7 @@
           Verificar Usuario
         </b-navbar-item>
         <!-- <b-navbar-item href="#" @click="logOut"> Cerrar Sesion</b-navbar-item> -->
-        <b-navbar-item href="#" @click="logOut"> Cerrar Sesion</b-navbar-item>
+        <b-navbar-item @click="logOut"> Cerrar Sesion</b-navbar-item>
       </b-navbar-dropdown>
     </template>
     <!-- Log In :: On -->

@@ -44,12 +44,19 @@
                     Recordarme
                   </label>
                 </div>
-                <button
+                <!-- <button
                   class="button is-block is-large is-fullwidth"
                   style="background:#cce268"
                 >
                   Ingresar
-                </button>
+                </button> -->
+                <b-button
+                  type="is-success"
+                  native-type="submit"
+                  expanded
+                  :loading="buttonActive"
+                  >Ingresar</b-button
+                >
               </form>
             </div>
             <p class="has-text-grey has-text-centered">
@@ -72,43 +79,49 @@ export default {
       pass: "",
       error: {
         message: ""
-      }
+      },
+      buttonActive: false
     };
   },
   methods: {
-    login() {
-      var Router = this.$router;
-      var Fail = this.error;
-      var Toast = this.Toast;
-      Firebase.auth()
-        .signInWithEmailAndPassword(this.email, this.pass)
-        .then(function(result) {
-          Router.replace({ name: "Home" });
-        })
-        .catch(function(err) {
-          switch (err.code) {
-            case "auth/invalid-email":
-              Fail.message = "El email que intenta ingresar es inválido.";
-              break;
-            case "auth/user-not-found":
-              Fail.message = "Usuario o email no encontrado.";
-              break;
-            case "auth/wrong-password":
-              Fail.message = "La contraseña no coincide con el email.";
-              break;
-            case "auth/user-disabled":
-              Fail.message =
-                "Parece que la cuenta que intenta acceder esta deshabilitada.";
-              break;
-            case "auth/too-many-requests":
-              Fail.message =
-                "Se ha sobrepasado el límite de intentos permitidos, por favor inténtelo de nuevo dentro de unos minutos.";
-              break;
-            default:
-              Fail.message = "Correo y contraseña incorrectos";
-              break;
-          }
-        });
+    async login() {
+      try {
+        this.buttonActive = true;
+        var Toast = this.Toast;
+        var login = await Firebase.auth().signInWithEmailAndPassword(
+          this.email,
+          this.pass
+        );
+        this.$router.replace({ name: "Home" });
+        this.messageError(err);
+      } catch (error) {
+        this.buttonActive = false;
+        this.messageError(error);
+      }
+    },
+    messageError(err) {
+      switch (err.code) {
+        case "auth/invalid-email":
+          this.error.message = "El email que intenta ingresar es inválido.";
+          break;
+        case "auth/user-not-found":
+          this.error.message = "Usuario o email no encontrado.";
+          break;
+        case "auth/wrong-password":
+          this.error.message = "La contraseña no coincide con el email.";
+          break;
+        case "auth/user-disabled":
+          this.error.message =
+            "Parece que la cuenta que intenta acceder esta deshabilitada.";
+          break;
+        case "auth/too-many-requests":
+          this.error.message =
+            "Se ha sobrepasado el límite de intentos permitidos, por favor inténtelo de nuevo dentro de unos minutos.";
+          break;
+        default:
+          this.error.message = "Correo y contraseña incorrectos";
+          break;
+      }
     }
   }
 };

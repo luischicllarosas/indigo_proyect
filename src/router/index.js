@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Registro from '@/views/Registro'
-import Ingreso from '@/views/Ingreso'
-
-Vue.use(VueRouter)
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+import Registro from "@/views/Registro";
+import Ingreso from "@/views/Ingreso";
+import { Firebase } from "@/db";
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -12,26 +12,43 @@ const routes = [
     redirect: { name: "Home" }
   },
   {
-    path: '/',
-    name: 'Home',
+    path: "/",
+    name: "Home",
     component: Home
   },
   {
-    path: '/registro',
-    name: 'registro',
-    component: Registro
+    path: "/registro",
+    name: "registro",
+    component: Registro,
+    meta: {
+      autentificado: false
+    }
   },
   {
-    path: '/ingreso',
-    name: 'ingreso',
-    component: Ingreso
-  },
-]
+    path: "/ingreso",
+    name: "ingreso",
+    component: Ingreso,
+    meta: {
+      autentificado: false
+    }
+  }
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
-})
+});
+console.log(app.$UsuarioActual);
 
-export default router
+router.beforeEach((to, from, next) => {
+  // var autorized = to.matched.some(record => record.meta.isAuthenticated);
+  var usuario = Firebase.auth().currentUser;
+  if ((to.name == "ingreso" && usuario) || (to.name == "registro" && usuario)) {
+    next({ path: "/" });
+  } else {
+    next();
+  }
+});
+
+export default router;
