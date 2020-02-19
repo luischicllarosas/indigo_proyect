@@ -1,16 +1,17 @@
 # indigoapp
+## NOTA : Este proyecto no incluye las credenciales de la base de datos por proteccion
 
-## Project setup
+## Instalar las dependencias antes de iniciar : 
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Iniciar servidor virtual para ver el proyecto
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compilar para produccion
 ```
 npm run build
 ```
